@@ -58,25 +58,25 @@ export default (jmEntry: JMdictEntr): WordForm[] => {
     const jmPriorities = [...(jmKePriorities ?? []), ...(jmRePriorities ?? [])];
 
     const wordId = +jmId;
-    const id = toHash(kanji + kana);
+    const id = toHash(jmId + kana + kanji);
 
     // Create combined info and turn to set to prevent duplicates
-    const infos =
+    const informations =
       jmReInfo || jmKeInfo
         ? [...new Set([...(jmReInfo ?? []), ...(jmKeInfo ?? [])])]
         : undefined;
 
-    infos?.forEach(entry => setManager.wordFormInfo.add(entry));
+    informations?.forEach(entry => setManager.wordFormInfo.add(entry));
 
     const unusual =
-      infos?.includes('oK') ||
-      infos?.includes('ok') ||
-      infos?.includes('iK') ||
-      infos?.includes('ik') ||
-      infos?.includes('io') ||
-      infos?.includes('ik') ||
-      infos?.includes('rK') ||
-      infos?.includes('rk') ||
+      informations?.includes('oK') ||
+      informations?.includes('ok') ||
+      informations?.includes('iK') ||
+      informations?.includes('ik') ||
+      informations?.includes('io') ||
+      informations?.includes('ik') ||
+      informations?.includes('rK') ||
+      informations?.includes('rk') ||
       undefined;
 
     const romaji = toRomaji(kana);
@@ -103,7 +103,7 @@ export default (jmEntry: JMdictEntr): WordForm[] => {
       furigana,
       usedKanji,
       unusual,
-      infos,
+      informations,
       meanings,
     });
   }

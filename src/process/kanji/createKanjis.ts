@@ -1,5 +1,11 @@
 import {Presets, SingleBar, type Options} from 'cli-progress';
-import {JLPT, Kanji, KanjiComposition, KanjiStroke} from 'tkdb-helper';
+import {
+  JLPT,
+  Kanji,
+  KanjiComposition,
+  KanjiGrade,
+  KanjiStroke,
+} from 'tkdb-helper';
 import {fileManager} from '../fileManager';
 import {toArray, toArrayOrUndefined} from '../../utils';
 import {
@@ -158,10 +164,9 @@ const getFrequency = (kd2Frequency: string | undefined): number | undefined => {
 
 const getGrade = (
   kd2Grade: Kanjidic2MiscGrade | undefined
-): number | undefined => {
+): KanjiGrade | undefined => {
   if (kd2Grade === undefined) return undefined;
-  const grade = parseInt(kd2Grade);
-  return grade;
+  return parseInt(kd2Grade, 10) as KanjiGrade;
 };
 
 const getJLPT = (literal: string): JLPT | undefined => {

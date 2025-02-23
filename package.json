@@ -25,6 +25,7 @@
     "posttest": "npm run lint",
     "download": "npx ts-node src/download/index.ts",
     "convert": "npx ts-node src/convert/index.ts",
+    "extract": "npx ts-node src/extract/index.ts",
     "process": "npx ts-node src/process/index.ts",
     "picker": "npx ts-node src/picker/index.ts",
     "csv": "npx ts-node src/csv/index.ts",
@@ -53,7 +54,7 @@
     "csv-parse": "^5.3.3",
     "encoding-japanese": "^2.0.0",
     "follow-redirects": "^1.15.6",
-    "tkdb-helper": "^0.1.3-rc.4",
+    "tkdb-helper": "^0.1.3-rc.9",
     "wanakana": "^5.0.2",
     "xml2js": "^0.5.0"
   }

@@ -6,6 +6,7 @@ import {fileManager} from '../../process/fileManager';
 import createForms from './createForms';
 import createSearchWords from './createSearchWords';
 import createMeanings from './createMeanings';
+import createMeaningsSummary from './createMeaningsSummary';
 
 export default (): Word[] => {
   const jmdict = fileManager.getJMdict();
@@ -24,12 +25,14 @@ export default (): Word[] => {
     const id = +jmEntry.ent_seq;
     const forms = createForms(jmEntry);
     const meanings = createMeanings(jmEntry);
+    const meaningsSummary = createMeaningsSummary(jmEntry);
     const searchWords = createSearchWords(jmEntry);
 
     words.push({
       id,
       forms,
       meanings,
+      meaningsSummary,
       searchWords,
     });
 
