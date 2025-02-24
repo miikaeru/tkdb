@@ -355,7 +355,7 @@ const getComposition = (literal: string): KanjiComposition[] | undefined => {
   if (literalInRadical) {
     return [
       {
-        element: literal,
+        component: literal,
         type: 'radical',
       },
     ];
@@ -375,29 +375,29 @@ const getComposition = (literal: string): KanjiComposition[] | undefined => {
     const composition: KanjiComposition[] = [];
 
     for (const group of groups) {
-      let element = group.element;
+      let component = group.element;
 
       const subgroup = toArrayOrUndefined(group.g);
       const subComp = getSubcomp(subgroup);
 
-      if (!element && subComp) {
+      if (!component && subComp) {
         composition.push(...subComp);
       }
 
-      element =
-        tkdbRadicals.find(radical => radical.kvgReference === element)
-          ?.literal ?? element;
+      component =
+        tkdbRadicals.find(radical => radical.kvgReference === component)
+          ?.literal ?? component;
 
       const validGrades = ['1', '2', '3', '4', '5', '6', '8'];
 
       const isKanji = !!kanjidic2.character.find(
         kanji =>
-          kanji.literal === element &&
+          kanji.literal === component &&
           validGrades.includes(kanji.misc.grade ?? '0')
       );
 
       const isRadical = !!tkdbRadicals.find(
-        radical => radical.literal === element
+        radical => radical.literal === component
       );
 
       const invalidKVGelements = [
@@ -417,33 +417,33 @@ const getComposition = (literal: string): KanjiComposition[] | undefined => {
 
       if (isKanji && isRadical) {
         composition.push({
-          element,
+          component,
           type: 'kanji',
           composition: [
             {
-              element,
+              component,
               type: 'radical',
             },
           ],
         });
       } else if (isKanji) {
         composition.push({
-          element,
+          component,
           type: 'kanji',
           composition: subComp,
         });
       } else if (isRadical) {
         composition.push({
-          element,
+          component,
           type: 'radical',
         });
       } else if (subComp) {
         composition.push(...subComp);
-      } else if (invalidKVGelements.includes(element)) {
+      } else if (invalidKVGelements.includes(component)) {
         return undefined;
       } else {
         throw new Error(
-          `Can not handle ${element} in composition of ${literal} `
+          `Can not handle ${component} in composition of ${literal} `
         );
       }
     }

@@ -302,10 +302,10 @@ const createKanji = async (kanjis: Kanji[], radicals: Radical[]) => {
       const type = composition.type;
 
       const compositionKanjiId =
-        type === 'kanji' ? getKanjiId(composition.element, kanjis) : '';
+        type === 'kanji' ? getKanjiId(composition.component, kanjis) : '';
 
       const compositionRadicalId =
-        type === 'radical' ? getRadicalId(composition.element, radicals) : '';
+        type === 'radical' ? getRadicalId(composition.component, radicals) : '';
 
       kanjiCompositionCsv.push([
         id,
