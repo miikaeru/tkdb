@@ -28,29 +28,29 @@ const createCategories = async (categories: Categories) => {
   const wordFormInfoCSV: string[][] = [];
   wordFormInfoCSV.push(['id', 'description']);
 
-  const wordMeaningPosCSV: string[][] = [];
-  wordMeaningPosCSV.push(['id', 'description']);
+  const wordSensePosCSV: string[][] = [];
+  wordSensePosCSV.push(['id', 'description']);
 
-  const wordMeaningFieldCSV: string[][] = [];
-  wordMeaningFieldCSV.push(['id', 'description']);
+  const wordSenseFieldCSV: string[][] = [];
+  wordSenseFieldCSV.push(['id', 'description']);
 
-  const wordMeaningMiscCSV: string[][] = [];
-  wordMeaningMiscCSV.push(['id', 'description']);
+  const wordSenseMiscCSV: string[][] = [];
+  wordSenseMiscCSV.push(['id', 'description']);
 
-  const wordMeaningDialectCSV: string[][] = [];
-  wordMeaningDialectCSV.push(['id', 'description']);
+  const wordSenseDialectCSV: string[][] = [];
+  wordSenseDialectCSV.push(['id', 'description']);
 
-  const wordTranslationTypeCSV: string[][] = [];
-  wordTranslationTypeCSV.push(['id', 'description']);
+  const wordGlossTypeCSV: string[][] = [];
+  wordGlossTypeCSV.push(['id', 'description']);
 
   const jlpt = categories.jlpt;
   const grade = categories.kanjiGrade;
   const formInfo = categories.wordFormInfo;
-  const meaningPos = categories.wordMeaningPos;
-  const meaningField = categories.wordMeaningField;
-  const meaningMisc = categories.wordMeaningMisc;
-  const meaningDialect = categories.wordMeaningDial;
-  const translationTypes = categories.wordTranslationType;
+  const sensePos = categories.wordSensePos;
+  const senseField = categories.wordSenseField;
+  const senseMisc = categories.wordSenseMisc;
+  const senseDialect = categories.wordSenseDial;
+  const glossTypes = categories.wordGlossType;
 
   for (const [key, value] of Object.entries(jlpt)) {
     jlptCSV.push([key, value]);
@@ -64,37 +64,34 @@ const createCategories = async (categories: Categories) => {
     wordFormInfoCSV.push([key, value]);
   }
 
-  for (const [key, value] of Object.entries(meaningPos)) {
-    wordMeaningPosCSV.push([key, value]);
+  for (const [key, value] of Object.entries(sensePos)) {
+    wordSensePosCSV.push([key, value]);
   }
 
-  for (const [key, value] of Object.entries(meaningField)) {
-    wordMeaningFieldCSV.push([key, value]);
+  for (const [key, value] of Object.entries(senseField)) {
+    wordSenseFieldCSV.push([key, value]);
   }
 
-  for (const [key, value] of Object.entries(meaningMisc)) {
-    wordMeaningMiscCSV.push([key, value]);
+  for (const [key, value] of Object.entries(senseMisc)) {
+    wordSenseMiscCSV.push([key, value]);
   }
 
-  for (const [key, value] of Object.entries(meaningDialect)) {
-    wordMeaningDialectCSV.push([key, value]);
+  for (const [key, value] of Object.entries(senseDialect)) {
+    wordSenseDialectCSV.push([key, value]);
   }
 
-  for (const [key, value] of Object.entries(translationTypes)) {
-    wordTranslationTypeCSV.push([key, value]);
+  for (const [key, value] of Object.entries(glossTypes)) {
+    wordGlossTypeCSV.push([key, value]);
   }
 
   await writeCSVFile(jlptCSV, 'output/csv/jlpt.csv');
   await writeCSVFile(gradeCSV, 'output/csv/grade.csv');
   await writeCSVFile(wordFormInfoCSV, 'output/csv/word_form_info.csv');
-  await writeCSVFile(wordMeaningPosCSV, 'output/csv/word_meaning_pos.csv');
-  await writeCSVFile(wordMeaningFieldCSV, 'output/csv/word_meaning_field.csv');
-  await writeCSVFile(wordMeaningMiscCSV, 'output/csv/word_meaning_misc.csv');
-  await writeCSVFile(wordMeaningDialectCSV, 'output/csv/word_meaning_dial.csv');
-  await writeCSVFile(
-    wordTranslationTypeCSV,
-    'output/csv/word_translation_type.csv'
-  );
+  await writeCSVFile(wordSensePosCSV, 'output/csv/word_sense_pos.csv');
+  await writeCSVFile(wordSenseFieldCSV, 'output/csv/word_sense_field.csv');
+  await writeCSVFile(wordSenseMiscCSV, 'output/csv/word_sense_misc.csv');
+  await writeCSVFile(wordSenseDialectCSV, 'output/csv/word_sense_dial.csv');
+  await writeCSVFile(wordGlossTypeCSV, 'output/csv/word_gloss_type.csv');
 };
 
 const getRadicalId = (literal: string, radicals: Radical[]): string => {
@@ -381,46 +378,46 @@ const createWords = async (words: Word[], kanjis: Kanji[]) => {
   const wordKanjiCSV: string[][] = [];
   wordKanjiCSV.push(['word_id', 'form_id', 'kanji_id', 'position']);
 
-  const wordMeaningCSV: string[][] = [];
-  wordMeaningCSV.push(['word_id', 'id', 'position']);
+  const wordSenseCSV: string[][] = [];
+  wordSenseCSV.push(['word_id', 'id', 'position']);
 
-  const wordMeaningPosCSV: string[][] = [];
-  wordMeaningPosCSV.push(['word_id', 'meaning_id', 'pos_id']);
+  const wordSensePosCSV: string[][] = [];
+  wordSensePosCSV.push(['word_id', 'sense_id', 'pos_id']);
 
-  const wordMeaningFieldCSV: string[][] = [];
-  wordMeaningFieldCSV.push(['word_id', 'meaning_id', 'field_id']);
+  const wordSenseFieldCSV: string[][] = [];
+  wordSenseFieldCSV.push(['word_id', 'sense_id', 'field_id']);
 
-  const wordMeaningMiscCSV: string[][] = [];
-  wordMeaningMiscCSV.push(['word_id', 'meaning_id', 'misc_id']);
+  const wordSenseMiscCSV: string[][] = [];
+  wordSenseMiscCSV.push(['word_id', 'sense_id', 'misc_id']);
 
-  const wordMeaningDialectCSV: string[][] = [];
-  wordMeaningDialectCSV.push(['word_id', 'meaning_id', 'dial_id']);
+  const wordSenseDialectCSV: string[][] = [];
+  wordSenseDialectCSV.push(['word_id', 'sense_id', 'dial_id']);
 
-  const wordTranslationCSV: string[][] = [];
-  wordTranslationCSV.push([
+  const wordGlossCSV: string[][] = [];
+  wordGlossCSV.push([
     'word_id',
-    'meaning_id',
+    'sense_id',
     'position',
-    'translation',
+    'definition',
     'type_id',
   ]);
 
-  const wordMeaningInfoCSV: string[][] = [];
-  wordMeaningInfoCSV.push(['word_id', 'meaning_id', 'position', 'info']);
+  const wordSenseInfoCSV: string[][] = [];
+  wordSenseInfoCSV.push(['word_id', 'sense_id', 'position', 'info']);
 
-  const wordMeaningRestrictionCSV: string[][] = [];
-  wordMeaningRestrictionCSV.push([
+  const wordSenseRestrictionCSV: string[][] = [];
+  wordSenseRestrictionCSV.push([
     'word_id',
-    'meaning_id',
+    'sense_id',
     'position',
     'restriction',
   ]);
 
-  const wordMeaningSummaryCSV: string[][] = [];
-  wordMeaningSummaryCSV.push(['word_id', 'meanings']);
+  const wordPrimaryGlossesCSV: string[][] = [];
+  wordPrimaryGlossesCSV.push(['word_id', 'glosses']);
 
   for (const word of words) {
-    const {id, forms, meanings} = word;
+    const {id, forms, senses} = word;
     const wordId = id.toString();
 
     wordCSV.push([wordId]);
@@ -486,52 +483,47 @@ const createWords = async (words: Word[], kanjis: Kanji[]) => {
       ++formIndex;
     }
 
-    let meaningIndex = 1;
-    for (const meaning of meanings) {
+    let senseIndex = 1;
+    for (const sense of senses) {
       const {
-        id: meaningId,
+        id: senseId,
         posCategories,
         fieldCategories,
         miscCategories,
         dialectCategories,
-        translations,
+        glosses,
         informations,
         restrictions,
-      } = meaning;
+      } = sense;
 
       if (posCategories) {
         for (const category of posCategories) {
-          wordMeaningPosCSV.push([wordId, meaningId, category]);
+          wordSensePosCSV.push([wordId, senseId, category]);
         }
       }
 
       if (fieldCategories) {
         for (const category of fieldCategories) {
-          wordMeaningFieldCSV.push([wordId, meaningId, category]);
+          wordSenseFieldCSV.push([wordId, senseId, category]);
         }
       }
 
       if (miscCategories) {
         for (const category of miscCategories) {
-          wordMeaningMiscCSV.push([wordId, meaningId, category]);
+          wordSenseMiscCSV.push([wordId, senseId, category]);
         }
       }
 
       if (dialectCategories) {
         for (const category of dialectCategories) {
-          wordMeaningDialectCSV.push([wordId, meaningId, category]);
+          wordSenseDialectCSV.push([wordId, senseId, category]);
         }
       }
 
       if (informations) {
         let infoIndex = 0;
         for (const info of informations) {
-          wordMeaningInfoCSV.push([
-            wordId,
-            meaningId,
-            infoIndex.toString(),
-            info,
-          ]);
+          wordSenseInfoCSV.push([wordId, senseId, infoIndex.toString(), info]);
           ++infoIndex;
         }
       }
@@ -539,9 +531,9 @@ const createWords = async (words: Word[], kanjis: Kanji[]) => {
       if (restrictions) {
         let restrictionIndex = 0;
         for (const restriction of restrictions) {
-          wordMeaningRestrictionCSV.push([
+          wordSenseRestrictionCSV.push([
             wordId,
-            meaningId,
+            senseId,
             restrictionIndex.toString(),
             restriction,
           ]);
@@ -549,24 +541,24 @@ const createWords = async (words: Word[], kanjis: Kanji[]) => {
         }
       }
 
-      let translationIndex = 1;
-      for (const translation of translations) {
-        const typeId = translation.type ?? '';
-        wordTranslationCSV.push([
+      let glossIndex = 1;
+      for (const gloss of glosses) {
+        const typeId = gloss.type ?? '';
+        wordGlossCSV.push([
           wordId,
-          meaningId,
-          translationIndex.toString(),
-          translation.text,
+          senseId,
+          glossIndex.toString(),
+          gloss.definition,
           typeId,
         ]);
-        ++translationIndex;
+        ++glossIndex;
       }
 
-      wordMeaningCSV.push([wordId, meaningId, meaningIndex.toString()]);
-      meaningIndex++;
+      wordSenseCSV.push([wordId, senseId, senseIndex.toString()]);
+      senseIndex++;
     }
 
-    wordMeaningSummaryCSV.push([wordId, JSON.stringify(word.meaningsSummary)]);
+    wordPrimaryGlossesCSV.push([wordId, JSON.stringify(word.primaryGlosses)]);
   }
 
   await writeCSVFile(wordCSV, 'output/csv/word.csv');
@@ -574,25 +566,19 @@ const createWords = async (words: Word[], kanjis: Kanji[]) => {
   await writeCSVFile(wordFormInfoCSV, 'output/csv/word_form_x_info.csv');
   await writeCSVFile(wordFuriganaCSV, 'output/csv/word_form_furigana.csv');
   await writeCSVFile(wordKanjiCSV, 'output/csv/word_form_x_kanji.csv');
-  await writeCSVFile(wordMeaningCSV, 'output/csv/word_meaning.csv');
-  await writeCSVFile(wordMeaningPosCSV, 'output/csv/word_meaning_x_pos.csv');
+  await writeCSVFile(wordSenseCSV, 'output/csv/word_sense.csv');
+  await writeCSVFile(wordSensePosCSV, 'output/csv/word_sense_x_pos.csv');
+  await writeCSVFile(wordSenseFieldCSV, 'output/csv/word_sense_x_field.csv');
+  await writeCSVFile(wordSenseMiscCSV, 'output/csv/word_sense_x_misc.csv');
+  await writeCSVFile(wordSenseDialectCSV, 'output/csv/word_sense_x_dial.csv');
+  await writeCSVFile(wordGlossCSV, 'output/csv/word_gloss.csv');
+  await writeCSVFile(wordSenseInfoCSV, 'output/csv/word_sense_info.csv');
   await writeCSVFile(
-    wordMeaningFieldCSV,
-    'output/csv/word_meaning_x_field.csv'
-  );
-  await writeCSVFile(wordMeaningMiscCSV, 'output/csv/word_meaning_x_misc.csv');
-  await writeCSVFile(
-    wordMeaningDialectCSV,
-    'output/csv/word_meaning_x_dial.csv'
-  );
-  await writeCSVFile(wordTranslationCSV, 'output/csv/word_translation.csv');
-  await writeCSVFile(wordMeaningInfoCSV, 'output/csv/word_meaning_info.csv');
-  await writeCSVFile(
-    wordMeaningRestrictionCSV,
-    'output/csv/word_meaning_restriction.csv'
+    wordSenseRestrictionCSV,
+    'output/csv/word_sense_restriction.csv'
   );
   await writeCSVFile(
-    wordMeaningSummaryCSV,
-    'output/csv/word_meaning_summary.csv'
+    wordPrimaryGlossesCSV,
+    'output/csv/word_primary_glosses.csv'
   );
 };

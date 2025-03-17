@@ -5,8 +5,9 @@ import type {Word} from 'tkdb-helper';
 import {fileManager} from '../../process/fileManager';
 import createForms from './createForms';
 import createSearchWords from './createSearchWords';
-import createMeanings from './createMeanings';
-import createMeaningsSummary from './createMeaningsSummary';
+
+import createPrimaryGlosses from './createPrimaryGlosses';
+import createSenses from './createSenses';
 
 export default (): Word[] => {
   const jmdict = fileManager.getJMdict();
@@ -24,15 +25,15 @@ export default (): Word[] => {
   for (const jmEntry of jmEntries) {
     const id = +jmEntry.ent_seq;
     const forms = createForms(jmEntry);
-    const meanings = createMeanings(jmEntry);
-    const meaningsSummary = createMeaningsSummary(jmEntry);
+    const senses = createSenses(jmEntry);
+    const primaryGlosses = createPrimaryGlosses(jmEntry);
     const searchWords = createSearchWords(jmEntry);
 
     words.push({
       id,
       forms,
-      meanings,
-      meaningsSummary,
+      senses,
+      primaryGlosses,
       searchWords,
     });
 

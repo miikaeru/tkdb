@@ -1,11 +1,11 @@
 import type {
   WordLanguageSource,
-  WordMeaning,
-  WordMeaningDial,
-  WordMeaningField,
-  WordMeaningMisc,
-  WordMeaningPos,
-  WordMeaningTranslation,
+  WordSenseDial,
+  WordSenseField,
+  WordSenseMisc,
+  WordSensePos,
+  WordSense,
+  WordGloss,
 } from 'tkdb-helper';
 
 import type {
@@ -19,15 +19,15 @@ import type {
 
 import {toArray, toArrayOrUndefined, toHash} from '../../utils';
 import {setManager} from '../setManager';
-import createTranslations from './createTranslations';
+import createGlosses from './createGlosses';
 
 interface Form {
   kana: string;
   kanji?: string | undefined;
 }
 
-export default (jmEntry: JMdictEntr, form?: Form): WordMeaning[] => {
-  const meanings: WordMeaning[] = [];
+export default (jmEntry: JMdictEntr, form?: Form): WordSense[] => {
+  const senses: WordSense[] = [];
 
   const jmSenses = toArray(jmEntry.sense);
 
@@ -69,7 +69,7 @@ export default (jmEntry: JMdictEntr, form?: Form): WordMeaning[] => {
       jmKanjiRestrictions
     );
 
-    const translations = createTranslations(jmGloss);
+    const glosses = createGlosses(jmGloss);
 
     const posCategories = getPosCategories(jmPartsOfSpeech);
     const fieldCategories = getFieldCategories(jmFields);
@@ -87,12 +87,12 @@ export default (jmEntry: JMdictEntr, form?: Form): WordMeaning[] => {
     const informations = getInformations(jmSenseInfo);
     const languageSources = getLanguageSources(jmLsources);
 
-    const id = getId(categories, translations, informations);
+    const id = getId(categories, glosses, informations);
 
-    meanings.push({
+    senses.push({
       id,
       restrictions,
-      translations,
+      glosses,
       posCategories,
       fieldCategories,
       dialectCategories,
@@ -102,18 +102,18 @@ export default (jmEntry: JMdictEntr, form?: Form): WordMeaning[] => {
     });
   }
 
-  return meanings;
+  return senses;
 };
 
 const getId = (
   categories: string[] | undefined,
-  translations: WordMeaningTranslation[],
+  glosses: WordGloss[],
   informations: string[] | undefined
 ): string => {
-  const flattedTranslations = translations.flatMap(translation => {
+  const flattedTranslations = glosses.flatMap(gloss => {
     const orderedValues: string[] = [];
-    if (translation.type) orderedValues.push(translation.type); // Push `type` first if it exists
-    orderedValues.push(translation.text);
+    if (gloss.type) orderedValues.push(gloss.type); // Push `type` first if it exists
+    orderedValues.push(gloss.definition);
     return orderedValues;
   });
 
@@ -128,9 +128,9 @@ const getId = (
 
 const getPosCategories = (
   jmPartsOfSpeech: JMdictSensPos[] | undefined
-): WordMeaningPos[] | undefined => {
+): WordSensePos[] | undefined => {
   jmPartsOfSpeech?.forEach(pos => {
-    setManager.wordMeaningPos.add(pos);
+    setManager.wordSensePos.add(pos);
   });
 
   return jmPartsOfSpeech;
@@ -152,27 +152,27 @@ const getRestrictions = (
 
 const getFieldCategories = (
   jmFields: JMdictSensField[] | undefined
-): WordMeaningField[] | undefined => {
+): WordSenseField[] | undefined => {
   jmFields?.forEach(field => {
-    setManager.wordMeaningField.add(field);
+    setManager.wordSenseField.add(field);
   });
   return jmFields;
 };
 
 const getDialectCategories = (
   jmDialects: JMdictSensDial[] | undefined
-): WordMeaningDial[] | undefined => {
+): WordSenseDial[] | undefined => {
   jmDialects?.forEach(dial => {
-    setManager.wordMeaningDial.add(dial);
+    setManager.wordSenseDial.add(dial);
   });
   return jmDialects;
 };
 
 const getMiscCategories = (
   jmMiscs: JMdictSensMisc[] | undefined
-): WordMeaningMisc[] | undefined => {
+): WordSenseMisc[] | undefined => {
   jmMiscs?.forEach(misc => {
-    setManager.wordMeaningMisc.add(misc);
+    setManager.wordSenseMisc.add(misc);
   });
   return jmMiscs;
 };

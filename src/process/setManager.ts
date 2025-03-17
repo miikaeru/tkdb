@@ -1,18 +1,18 @@
 export class SetManager {
   public wordFormInfo: Set<string>;
-  public wordMeaningPos: Set<string>;
-  public wordMeaningField: Set<string>;
-  public wordMeaningMisc: Set<string>;
-  public wordMeaningDial: Set<string>;
-  public wordTranslationType: Set<string>;
+  public wordSensePos: Set<string>;
+  public wordSenseField: Set<string>;
+  public wordSenseMisc: Set<string>;
+  public wordSenseDial: Set<string>;
+  public wordGlossType: Set<string>;
 
   constructor() {
     this.wordFormInfo = new Set();
-    this.wordMeaningPos = new Set();
-    this.wordMeaningField = new Set();
-    this.wordMeaningMisc = new Set();
-    this.wordMeaningDial = new Set();
-    this.wordTranslationType = new Set();
+    this.wordSensePos = new Set();
+    this.wordSenseField = new Set();
+    this.wordSenseMisc = new Set();
+    this.wordSenseDial = new Set();
+    this.wordGlossType = new Set();
   }
 }
 

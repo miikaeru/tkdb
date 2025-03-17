@@ -1,11 +1,11 @@
-import type {WordMeaningTranslation} from 'tkdb-helper';
+import type {WordGloss} from 'tkdb-helper';
 
 import type {JMdictEntr} from '../../type/jmdict';
 import {toArray} from '../../utils';
-import createTranslations from './createTranslations';
+import createGlosses from './createGlosses';
 
-export default (jmEntry: JMdictEntr): WordMeaningTranslation[] => {
-  const meanings: WordMeaningTranslation[] = [];
+export default (jmEntry: JMdictEntr): WordGloss[] => {
+  const primaryGlosses: WordGloss[] = [];
 
   const jmSenses = toArray(jmEntry.sense);
 
@@ -14,19 +14,19 @@ export default (jmEntry: JMdictEntr): WordMeaningTranslation[] => {
 
     const jmGloss = toArray(gloss);
 
-    const translations = createTranslations(jmGloss).slice(0, 3);
+    const glosses = createGlosses(jmGloss).slice(0, 3);
 
-    translations.forEach(translation => {
-      if (meanings.length < 9) {
-        const text = removeParenthesesIfTextRemains(translation.text);
-        const type = translation.type;
+    glosses.forEach(gloss => {
+      if (glosses.length < 9) {
+        const definition = removeParenthesesIfTextRemains(gloss.definition);
+        const type = gloss.type;
 
-        meanings.push({text, type});
+        primaryGlosses.push({definition, type});
       }
     });
   }
 
-  return meanings;
+  return primaryGlosses;
 };
 
 const removeNestedParentheses = (input: string): string => {

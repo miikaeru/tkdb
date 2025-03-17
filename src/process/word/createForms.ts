@@ -11,7 +11,7 @@ import {isKanji, toRomaji} from 'wanakana';
 
 import {fileManager} from '../fileManager';
 import {setManager} from '../setManager';
-import createMeanings from './createMeanings';
+import createSenses from './createSenses';
 
 interface Form {
   kana: string;
@@ -89,7 +89,7 @@ export default (jmEntry: JMdictEntr): WordForm[] => {
     const furigana = getFurigana(formCombination);
     const usedKanji = extractKanji(kanji);
 
-    const meanings = createMeanings(jmEntry, {kana, kanji});
+    const senses = createSenses(jmEntry, {kana, kanji});
 
     forms.push({
       wordId,
@@ -104,7 +104,7 @@ export default (jmEntry: JMdictEntr): WordForm[] => {
       usedKanji,
       unusual,
       informations,
-      meanings,
+      senses,
     });
   }
 
