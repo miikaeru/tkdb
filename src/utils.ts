@@ -22,7 +22,7 @@ export const toArray = <T>(input: T[] | T): T[] => {
 };
 
 export const toArrayOrUndefined = <T>(
-  input: T[] | T | undefined
+  input: T[] | T | undefined,
 ): T[] | undefined => {
   if (Array.isArray(input)) {
     return input;
@@ -40,34 +40,62 @@ export const readJsonFile = async <T>(filePath: string): Promise<T> => {
 
 export const writeJsonFile = async (
   value: unknown,
-  path: string
+  filePath: string,
 ): Promise<void> => {
   const data = JSON.stringify(value, null, 2);
-  await writeFile(path, data);
+  await writeFile(`output/json/${filePath}`, data);
 };
 
-export const writeCSVFile = async (
-  value: string[][],
-  path: string
-): Promise<void> => {
-  const escapeCsvValue = (val: string): string => {
-    if (val.includes(',') || val.includes('\n') || val.includes('"')) {
-      // Escape quotes by doubling them and wrap the value in quotes
-      return `"${val.replace(/"/g, '""')}"`;
+function camelToSnake(str: string): string {
+  return str.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
+}
+
+export async function writeCSVFile<T extends Record<string, unknown>>(
+  data: T[],
+  filePath: string,
+  headers?: (keyof T)[],
+): Promise<void> {
+  if (data.length === 0) {
+    throw new Error('No data to write');
+  }
+
+  const escapeCsvValue = (val: unknown): string => {
+    let str: string;
+    if (val === null || val === undefined) {
+      str = '';
+    } else if (typeof val === 'object') {
+      str = JSON.stringify(val);
+    } else {
+      str = String(val);
     }
-    return val;
+
+    if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
   };
 
-  const csvRows = value.map(row => row.map(escapeCsvValue).join(','));
-  const csvString = csvRows.join('\n');
+  // If headers passed → only those fields, otherwise all keys from first object
+  const keys: (keyof T)[] = headers ?? (Object.keys(data[0]) as (keyof T)[]);
 
-  await writeFile(path, csvString);
-};
+  // Header row (snake_case)
+  const headerRow = keys.map(key => camelToSnake(String(key)));
+  const csvRows: string[] = [headerRow.join(',')];
+
+  // Data rows
+  for (const row of data) {
+    const csvRow = keys.map(key => escapeCsvValue(row[key]));
+    csvRows.push(csvRow.join(','));
+  }
+
+  const csvString = csvRows.join('\n');
+  await writeFile(`output/csv/${filePath}`, csvString);
+}
 
 export const setIncludesExactRecordKeys = <T extends string>(
   set: Set<T>,
   record: Record<T, unknown>,
-  setIdentifier: string
+  setIdentifier: string,
 ): void => {
   const missingKeys: T[] = [];
   const extraKeys: T[] = [];

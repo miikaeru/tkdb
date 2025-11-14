@@ -12,7 +12,7 @@ export default async (): Promise<void> => {
 
   await createCategories(categories);
   await createRadical(radicals);
-  await createKanji(kanjis, radicals);
+  await createKanji(kanjis);
   await createWords(words, kanjis);
 
   console.log(green('All CSV files are created'));
@@ -94,52 +94,48 @@ const createCategories = async (categories: Categories) => {
   await writeCSVFile(wordGlossTypeCSV, 'output/csv/word_gloss_type.csv');
 };
 
-const getRadicalId = (literal: string, radicals: Radical[]): string => {
-  const id = radicals.find(radical => radical.literal === literal)?.id;
+// const getRadicalId = (literal: string, radicals: Radical[]): string => {
+//   const id = radicals.find(radical => radical.literal === literal)?.id;
 
-  if (id === undefined) {
-    throw new Error(`Radical with literal ${literal} was not found`);
-  }
+//   if (id === undefined) {
+//     throw new Error(`Radical with literal ${literal} was not found`);
+//   }
 
-  return id;
-};
+//   return id;
+// };
 
 const createRadical = async (radicals: Radical[]) => {
   const radicalCsv: string[][] = [];
   radicalCsv.push([
-    'id',
     'literal',
     'number',
     'keyword',
     'mnemonic',
     'strokecount_id',
-    'variant_of_id',
+    'variant_of_literal',
   ]);
 
   const radicalMeaningCsv: string[][] = [];
-  radicalMeaningCsv.push(['radical_id', 'position', 'meaning']);
+  radicalMeaningCsv.push(['literal', 'position', 'meaning']);
 
   const radicalReadingCsv: string[][] = [];
-  radicalReadingCsv.push(['radical_id', 'position', 'reading']);
+  radicalReadingCsv.push(['literall', 'position', 'reading']);
 
   for (const radical of radicals) {
-    const {id, literal} = radical;
+    const {literal} = radical;
     const keyword = radical.keyword ?? '';
     const mnemonic = radical.mnemonic ?? '';
     const number = String(radical.number ?? '');
     const strokecountId = String(radical.strokecount ?? '');
-    const variantOfId = radical.variantOf
-      ? getRadicalId(radical.variantOf, radicals)
-      : '';
+    const variantOfLiteral = radical.variantOf ?? '';
 
     radicalCsv.push([
-      id,
       literal,
       number,
       keyword,
       mnemonic,
       strokecountId,
-      variantOfId,
+      variantOfLiteral,
     ]);
 
     const meanings = radical.meanings ?? [];
@@ -148,14 +144,14 @@ const createRadical = async (radicals: Radical[]) => {
     let meaningIndex = 1;
     for (const meaning of meanings) {
       const position = String(meaningIndex);
-      radicalMeaningCsv.push([id, position, meaning]);
+      radicalMeaningCsv.push([literal, position, meaning]);
       meaningIndex++;
     }
 
     let readingIndex = 1;
     for (const reading of readings) {
       const position = String(readingIndex);
-      radicalReadingCsv.push([id, position, reading]);
+      radicalReadingCsv.push([literal, position, reading]);
       readingIndex++;
     }
   }
@@ -165,22 +161,21 @@ const createRadical = async (radicals: Radical[]) => {
   await writeCSVFile(radicalMeaningCsv, 'output/csv/radical_meaning.csv');
 };
 
-const getKanjiId = (literal: string, kanjis: Kanji[]): string => {
-  const id = kanjis.find(kanji => kanji.literal === literal)?.id;
+// const getKanjiId = (literal: string, kanjis: Kanji[]): string => {
+//   const id = kanjis.find(kanji => kanji.literal === literal)?.id;
 
-  if (id === undefined) {
-    throw new Error(`Kanji with literal ${literal} was not found`);
-  }
+//   if (id === undefined) {
+//     throw new Error(`Kanji with literal ${literal} was not found`);
+//   }
 
-  return id;
-};
+//   return id;
+// };
 
-const createKanji = async (kanjis: Kanji[], radicals: Radical[]) => {
+const createKanji = async (kanjis: Kanji[]) => {
   const strokecounts = new Set<number>();
 
   const kanjiCsv: string[][] = [];
   kanjiCsv.push([
-    'id',
     'literal',
     'frequency',
     'keyword',
@@ -191,39 +186,39 @@ const createKanji = async (kanjis: Kanji[], radicals: Radical[]) => {
   ]);
 
   const kanjiMeaningCsv: string[][] = [];
-  kanjiMeaningCsv.push(['kanji_id', 'position', 'meaning']);
+  kanjiMeaningCsv.push(['literal', 'position', 'meaning']);
 
   const kanjiKunCsv: string[][] = [];
-  kanjiKunCsv.push(['kanji_id', 'position', 'kun']);
+  kanjiKunCsv.push(['literal', 'position', 'kun']);
 
   const kanjiOnCsv: string[][] = [];
-  kanjiOnCsv.push(['kanji_id', 'position', 'on']);
+  kanjiOnCsv.push(['literal', 'position', 'on']);
 
   const kanjiNanoriCsv: string[][] = [];
-  kanjiNanoriCsv.push(['kanji_id', 'position', 'nanori']);
+  kanjiNanoriCsv.push(['literal', 'position', 'nanori']);
 
   const kanjiAntonymCsv: string[][] = [];
-  kanjiAntonymCsv.push(['kanji_id', 'antonym_id']);
+  kanjiAntonymCsv.push(['literal', 'antonym_literal']);
 
   const kanjiLookalikeCsv: string[][] = [];
-  kanjiLookalikeCsv.push(['kanji_id', 'looklike_id']);
+  kanjiLookalikeCsv.push(['literal', 'looklike_literal']);
 
   const kanjiSynonymCsv: string[][] = [];
-  kanjiSynonymCsv.push(['kanji_id', 'synonym_id']);
+  kanjiSynonymCsv.push(['literal', 'synonym_literal']);
 
   const kanjiStrokeCsv: string[][] = [];
-  kanjiStrokeCsv.push(['kanji_id', 'position', 'stroke', 'start_y', 'start_x']);
+  kanjiStrokeCsv.push(['literal', 'position', 'stroke', 'start_y', 'start_x']);
 
   const kanjiCompositionCsv: string[][] = [];
   kanjiCompositionCsv.push([
-    'parent_kanji_id',
+    'literal',
     'position',
-    'child_kanji_id',
-    'child_radical_id',
+    'child_kanji_literal',
+    'child_radical_literal',
   ]);
 
   for (const kanji of kanjis) {
-    const {id, literal} = kanji;
+    const {literal} = kanji;
 
     const frequency = String(kanji.frequency ?? '');
     const keyword = kanji.keyword ?? '';
@@ -245,50 +240,47 @@ const createKanji = async (kanjis: Kanji[], radicals: Radical[]) => {
     let meaningIndex = 1;
     for (const meaning of meanings) {
       const position = String(meaningIndex);
-      kanjiMeaningCsv.push([id, position, meaning]);
+      kanjiMeaningCsv.push([literal, position, meaning]);
       meaningIndex++;
     }
 
     let kunIndex = 1;
     for (const kun of kuns) {
       const position = String(kunIndex);
-      kanjiKunCsv.push([id, position, kun]);
+      kanjiKunCsv.push([literal, position, kun]);
       kunIndex++;
     }
 
     let onIndex = 1;
     for (const on of ons) {
       const position = String(onIndex);
-      kanjiOnCsv.push([id, position, on]);
+      kanjiOnCsv.push([literal, position, on]);
       onIndex++;
     }
 
     let nanoriIndex = 1;
     for (const nanori of nanoris) {
       const position = String(nanoriIndex);
-      kanjiNanoriCsv.push([id, position, nanori]);
+      kanjiNanoriCsv.push([literal, position, nanori]);
       nanoriIndex++;
     }
 
     for (const antonym of antonyms) {
-      const antonymId = getKanjiId(antonym, kanjis);
-      kanjiAntonymCsv.push([id, antonymId]);
+      kanjiAntonymCsv.push([literal, antonym]);
     }
 
     for (const lookalike of lookalikes) {
-      const lookalikeId = getKanjiId(lookalike, kanjis);
-      kanjiLookalikeCsv.push([id, lookalikeId]);
+      kanjiLookalikeCsv.push([literal, lookalike]);
     }
 
     for (const synonym of synonyms) {
-      const synonymId = getKanjiId(synonym, kanjis);
-      kanjiSynonymCsv.push([id, synonymId]);
+      kanjiSynonymCsv.push([literal, synonym]);
     }
 
     let strokeIndex = 1;
     for (const stroke of strokes) {
       const position = String(strokeIndex);
-      kanjiStrokeCsv.push([id, position, stroke.path, stroke.y, stroke.x]);
+      kanjiStrokeCsv.push([literal, position, stroke.path, stroke.y, stroke.x]);
       strokeIndex++;
     }
 
@@ -298,17 +290,16 @@ const createKanji = async (kanjis: Kanji[], radicals: Radical[]) => {
       const position = String(compositionIndex);
       const type = composition.type;
 
-      const compositionKanjiId =
-        type === 'kanji' ? getKanjiId(composition.component, kanjis) : '';
+      const compositionKanji = type === 'kanji' ? composition.component : '';
 
-      const compositionRadicalId =
-        type === 'radical' ? getRadicalId(composition.component, radicals) : '';
+      const compositionRadical =
+        type === 'radical' ? composition.component : '';
 
       kanjiCompositionCsv.push([
-        id,
+        literal,
         position,
-        compositionKanjiId,
-        compositionRadicalId,
+        compositionKanji,
+        compositionRadical,
       ]);
       compositionIndex++;
     }
@@ -316,7 +307,6 @@ const createKanji = async (kanjis: Kanji[], radicals: Radical[]) => {
     strokecounts.add(kanji.strokecount);
 
     kanjiCsv.push([
-      id,
       literal,
       frequency,
       keyword,
@@ -376,7 +366,7 @@ const createWords = async (words: Word[], kanjis: Kanji[]) => {
   wordFuriganaCSV.push(['word_id', 'form_id', 'furigana']);
 
   const wordKanjiCSV: string[][] = [];
-  wordKanjiCSV.push(['word_id', 'form_id', 'kanji_id', 'position']);
+  wordKanjiCSV.push(['word_id', 'form_id', 'literal', 'position']);
 
   const wordSenseCSV: string[][] = [];
   wordSenseCSV.push(['word_id', 'id', 'position']);
@@ -465,17 +455,15 @@ const createWords = async (words: Word[], kanjis: Kanji[]) => {
         for (const usedKanji of usedKanjiData) {
           const literal = usedKanji;
 
-          try {
-            const kanjiId = getKanjiId(literal, kanjis);
+          // Confirm the literal exists in kanji data before adding it to the CSV
+          if (kanjis.find(kanji => kanji.literal === literal)) {
             wordKanjiCSV.push([
               wordId,
               formId,
-              kanjiId,
+              literal,
               kanjiPosition.toString(),
             ]);
             ++kanjiPosition;
-          } catch (error) {
-            // Ignore the error and continue with the next character
           }
         }
       }

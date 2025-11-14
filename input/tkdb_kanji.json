@@ -1,7 +1,68 @@
 [
     {
+        "position": 1,
+        "literal": "一",
+        "keyword": "One",
+        "mnemonic": ""
+    },
+    {
+        "position": 2,
+        "literal": "二",
+        "keyword": "Two",
+        "mnemonic": ""
+    },
+    {
+        "position": 3,
+        "literal": "三",
+        "keyword": "Three",
+        "mnemonic": ""
+    },
+    {
+        "position": 4,
         "literal": "日",
         "keyword": "sun",
         "mnemonic": "If you look out the window during the day, you can see the sun."
+    },
+    {
+        "position": 5,
+        "literal": "月",
+        "keyword": "moon",
+        "mnemonic": ""
+    },
+    {
+        "position": 6,
+        "literal": "明",
+        "keyword": "bright",
+        "mnemonic": ""
+    },
+    {
+        "position": 7,
+        "literal": "人",
+        "keyword": "person",
+        "mnemonic": ""
+    },
+    {
+        "position": 8,
+        "literal": "大",
+        "keyword": "big",
+        "mnemonic": ""
+    },
+    {
+        "position": 9,
+        "literal": "犬",
+        "keyword": "dog",
+        "mnemonic": ""
+    },
+    {
+        "position": 10,
+        "literal": "目",
+        "keyword": "eye",
+        "mnemonic": ""
+    },
+    {
+        "position": 11,
+        "literal": "口",
+        "keyword": "mouth",
+        "mnemonic": ""
     }
 ]

@@ -1,11 +1,5 @@
 import {Presets, SingleBar, type Options} from 'cli-progress';
-import {
-  JLPT,
-  Kanji,
-  KanjiComposition,
-  KanjiGrade,
-  KanjiStroke,
-} from 'tkdb-helper';
+import {JLPT, Kanji, KanjiComposition, KanjiGrade} from 'tkdb-helper';
 import {fileManager} from '../fileManager';
 import {toArray, toArrayOrUndefined} from '../../utils';
 import {
@@ -13,7 +7,7 @@ import {
   Kanjidic2CharRdngMngGrpRdng,
   Kanjidic2MiscGrade,
 } from '../../type/kanjidic2';
-import {KVGKanjiGroup} from '../../type/kanjivg';
+import {KVGKanjiGroup} from '../../schemas/kanjivgSchema';
 import {Kradfilex} from '../../type/kradfilex';
 
 export default (): Kanji[] => {
@@ -262,82 +256,6 @@ const getRadicals = (literal: string): string[] | undefined => {
   });
 
   return radicals;
-};
-
-const getStrokes = (literal: string): KanjiStroke[] | undefined => {
-  const kanjivgMap = fileManager.getKanjivgMap();
-
-  const hexLiteral = kanjiToHex(literal);
-  const lookupKey = `kanji_${hexLiteral}`;
-  const match = kanjivgMap.get(lookupKey);
-
-  if (match === undefined) {
-    return undefined;
-  }
-
-  const strokes: KanjiStroke[] = [];
-
-  const processGroups = (groups: KVGKanjiGroup[]): void => {
-    for (const group of groups) {
-      const subGroups = toArrayOrUndefined(group.g);
-
-      if (subGroups !== undefined) {
-        processGroups(subGroups);
-      }
-
-      const paths = toArrayOrUndefined(group.path);
-
-      if (paths !== undefined) {
-        for (const path of paths) {
-          const strokePath = path.d;
-          const {x, y} = extractXYfromPath(strokePath);
-
-          strokes.push({
-            path: strokePath,
-            y,
-            x,
-          });
-        }
-      }
-    }
-  };
-
-  const parentGroups = [match.g];
-  processGroups(parentGroups);
-
-  return strokes;
-};
-
-export const extractXYfromPath = (path: string): {x: string; y: string} => {
-  // Regular expression to match the pattern, case-insensitive
-  const regex = /M\s*([\d.]+)\s*,\s*([\d.]+)\s*c/i;
-  const match = path.match(regex);
-
-  if (
-    match !== null &&
-    match.length > 2 &&
-    match[1] !== undefined &&
-    match[2] !== undefined
-  ) {
-    return {x: match[1], y: match[2]};
-  }
-
-  // Return null if the pattern doesn't match
-  throw new Error(`Could not extract x and y positions from ${path}`);
-};
-
-export const kanjiToHex = (kanji: string): string => {
-  // Ensure the input is valid for characters outside the BMP
-  const codePoint = kanji.codePointAt(0);
-
-  if (codePoint === undefined) {
-    throw new Error('Invalid character input.');
-  }
-
-  const hexString = codePoint.toString(16).toLowerCase();
-
-  // Ensure the result is a five-digit string
-  return hexString.padStart(5, '0');
 };
 
 const getComposition = (literal: string): KanjiComposition[] | undefined => {
